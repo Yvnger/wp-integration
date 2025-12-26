@@ -37,10 +37,8 @@ services:
     user: "1000:1000"
     ports:
       - "9000:9000"
-    environment:
-      - UID=1000
-      - GID=1000
-      - WORDPRESS_ENV=development
+    env_file:
+      - .env.docker
     depends_on:
       - db
 
