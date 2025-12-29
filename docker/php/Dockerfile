@@ -1,5 +1,8 @@
 FROM php:8.2-fpm
 
+ARG UID=1000
+ARG GID=1000
+
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -15,6 +18,9 @@ RUN apt-get update && apt-get install -y \
         xml \
     && rm -rf /var/lib/apt/lists/*
 
+RUN groupadd -g ${GID} appuser \
+ && useradd -u ${UID} -g ${GID} -m appuser
+
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # WP-CLI — вставляем прямо сюда
@@ -22,6 +28,8 @@ RUN curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh
     && chmod +x /usr/local/bin/wp
 
 WORKDIR /var/www/html
+
+RUN chown -R appuser:appuser /var/www
 
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
