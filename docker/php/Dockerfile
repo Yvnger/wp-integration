@@ -17,6 +17,10 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# WP-CLI — вставляем прямо сюда
+RUN curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+    && chmod +x /usr/local/bin/wp
+
 WORKDIR /var/www/html
 
 COPY docker/entrypoint.sh /entrypoint.sh
